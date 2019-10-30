@@ -1,0 +1,91 @@
+/* QUESTÃO 7 (READ COMMITTED) */
+begin
+set transaction isolation level read committed;
+update Jogador set Nome = 'Adilson' where RG=111111111;
+commit;
+
+
+
+
+/* QUESTÃO 7 (REPEATABLE READ) */
+begin
+set transaction isolation level repeatable read;
+update Jogador set Nome = 'Gustavo' where RG=111111111;
+commit;
+
+
+
+
+
+/* QUESTÃO 8 (READ COMMITTED) - LETRA A */
+begin
+set transaction isolation level read committed;
+insert into Equipe values(10, 'Treze', 'PB', 'Profissional', 10);
+commit;
+
+
+
+
+/* QUESTÃO 8 (SERIALIZABLE) - LETRA B */
+begin
+set transaction isolation level serializable;
+insert into Equipe values(11, 'Campinense', 'PB', 'Profissional', 10);
+commit;
+
+
+
+
+/* QUESTÃO 9 - LETRA A(READ COMMITTED) */
+begin
+set transaction isolation level read committed;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'CR7' where RG=111111111;
+commit;
+
+/*
+
+iii - Após executar o update na sessão 2, a execução ficará em andamento até que a sessão 1 seja finalizada.
+iv - Depois do commit na sessão 1, o update é executado retornando a seguinte mensagem "Query returned successfully: one row affected, 147135 ms execution time."
+
+*/
+
+
+
+
+
+
+
+
+/* QUESTÃO 9 - LETRA B (SEREALIZABLE) */
+
+begin
+set transaction isolation level serializable;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'Neymar' where RG=111111111;
+commit;
+
+/*
+
+iii - Após a execução do update na sessão 2, a execução ficará em andamento até que a sessão 1 seja finalizada.
+iv - Depois do commit na sessão 1, a transação da sessão 2 foi finalizada indicando o seguinte erro: "ERRO:  não pôde serializar acesso devido a uma atualização concorrente"
+
+*/
+
+
+
+
+
+/* QUESTÃO 9 - LETRA C (SEREALIZABLE) */
+
+begin
+set transaction isolation level serializable;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'Fallen' where RG=111111111;
+commit;
+
+/*
+
+iii - Após a execução do update na sessão 2, a execução ficará em andamento até que a sessão 1 seja finalizada.
+iv - Após o rollback na sessão 1, o update da sessão 2 foi executado com sucesso, pois, como todas as modificações foram desfeitas, o nível serealizable permitiu por não haver problema de leitura não repetível.
+
+*/
