@@ -1,0 +1,115 @@
+/* Questão 7 (read committed) 
+
+isolamento READ COMMITTED permite a LEITURA NÃO REPETIVEL(unrepeatable reads) 
+e FANTASMA(phantom reads) 
+
+*/
+
+
+begin
+set transaction isolation level read committed;
+select j.RG, j.Nome, e.Nome from Equipe e
+join Jogador j
+on j.IdEquipe = e.IdEquipe
+where j.RG = 111111111;
+commit;
+
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Questão 7 (repeatable read) 
+
+isolamento -REPEATABLE READ- permite apenas as LEITURA FANTASMA(phantom reads)
+
+*/
+
+begin
+set transaction isolation level repeatable read;
+select j.RG, j.Nome, e.Nome from Equipe e
+join Jogador j
+on j.IdEquipe = e.IdEquipe
+where j.RG = 111111111;
+commit;
+
+
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+
+
+
+/* QUESTÃO 8 - LETRA A (READ COMMITTED)  
+
+isolamento READ COMMITTED permite a LEITURA NÃO REPETIVEL(unrepeatable reads) 
+e FANTASMA(phantom reads) 
+
+*/
+
+begin
+set transaction isolation level read committed;
+select * from Equipe;
+commit;
+
+select * from Equipe;
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+/* QUESTÃO 8 - LETRA B (SERIALIZABLE)  
+
+Esse é o nível que leva o isolamento ao máximo. Aqui, nenhum desses problemas podem ocorrer.
+
+*/
+
+
+
+begin
+set transaction isolation level serializable;
+select * from Equipe;
+commit;
+
+
+
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+
+/* QUESTÃO 9 - LETRA A (READ COMMITTED) */
+begin
+set transaction isolation level read committed;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'CR7' where RG=111111111;
+commit;
+
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+
+
+
+/* QUESTÃO 9 - LETRA B (SERIALIZABLE) */
+
+begin
+set transaction isolation level serializable;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'Neymar' where RG=111111111;
+commit;
+
+
+/*--------------------------------------------------------------------------------------------- */
+
+
+
+/* QUESTÃO 9 - LETRA C (SEREALIZABLE) */
+
+begin
+set transaction isolation level serializable;
+select Nome from Jogador where RG=111111111;
+update Jogador set Nome = 'Fallen' where RG=111111111;
+rollback;
