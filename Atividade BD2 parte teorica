@@ -1,0 +1,72 @@
+/*1. O que é uma transação?
+
+Na área de banco de dados, uma transação é uma sequência de operações num sistema de gerência de banco de dados que são tratadas como um bloco único e indivisível (atômico) durante uma recuperação de falhas e também prover isolamento entre acessos concorrentes na mesma massa de dados.
+
+
+
+
+2. Qual é o significado da sigla ACID?
+
+Existem quatro características que os SGBDs devem garantir se pretendem lidar com transações com segurança. O conjunto dessas características é conhecido como ACID (atomicity, consistency, isolation, durability).
+
+
+
+
+3. Explique o funcionamento dos seguintes comandos: begin, savepoint, commit e rollback.
+
+BEGIN - Tag inicial para o inicio de uma transação.
+
+SAVEPOINT - O ponto de salvamento é uma marca especial dentro da transação que permite desfazer todos os comandos executados após o seu estabelecimento, restaurando o estado da transação ao que era quando o ponto de salvamento foi estabelecido.
+
+COMMIT ou ROLLBACK - Comandos que finalizam a transação onde o ‘commit’ confirma o conjunto de comandos e o ‘rollback’ desfaz todo o processo executado pelo corpo de comandos caso tenha ocorrindo algum evento contrario ao desejado.
+
+
+
+
+4. Quais são os problemas de isolamento que podem acontecer quando existem transações concorrentes?
+
+Dirty read - (leitura suja).
+Unrepeatable Reads - (leitura não repetíveis)
+Panthom Read - (leitura fantasmas)
+
+
+
+
+5. Quais são os níveis de isolamento que podem ser utilizados em uma transação?Explique cada um deles.
+
+READ UNCOMMITED
+Nível menos isolado. Aqui, todos os problemas citados podem ocorrer, inclusive as porcas dirty reads. É muito difícil um SGBD permitir que o DBA mesmo que deliberadamente configure o nível de isolamento para READ UNCOMMITED. Em resumo, é um nível acadêmico, apenas para você dizer que conhece.
+
+READ COMMITED
+Nível padrão do PostgreSQL. Aqui dirty reads estão barradas, mas, como verificamos nos exercícios anteriores, unrepeatable reads e phantom reads podem ocorrer.
+
+REPEATABLE READ
+Neste nível, apenas as phantom reads podem ocorrer. Os SGBDs fazem bloqueio (lock) do conjunto de dados lidos em uma transação, o que evita que as leituras posteriores apresentem resultados modificados ou deletados confirmados por outra transação. No entanto, não há como fazer lock de um registro que ainda não existia na primeira leitura. Este é o motivo pelo qual as leituras fantasmas podem assombrar por aqui.
+
+SERIALIZABLE
+Esse é o nível que leva o isolamento ao máximo. Aqui, nenhum desses problemas podem ocorrer.
+
+
+
+
+
+
+6. Como configurar o nível de isolamento de uma transação? Dê exemplo.
+
+
+
+Sintaxe:
+
+SET TRANSACTION [ISOLATION LEVEL { SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED } ]  [ {READ WRITE | READ ONLY} ]
+
+
+
+Exemplo:
+
+
+begin
+set transaction ISOLATION LEVEL SERIALIZABLE;
+select * from Jogo;
+commit;
+
+*/
